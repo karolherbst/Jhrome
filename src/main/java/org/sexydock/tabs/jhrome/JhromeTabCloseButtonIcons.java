@@ -65,17 +65,32 @@ public class JhromeTabCloseButtonIcons
 	
 	public static ImageIcon createJhromeNormalIcon( )
 	{
-		return createIcon( 12 , 2.9f , new Color( 174 , 174 , 174 ) , new BasicStroke( 1.4f ) , null );
+		return createJhromeNormalIcon( 12 );
+	}
+	
+	public static ImageIcon createJhromeNormalIcon( int size )
+	{
+		return createIcon( size , 0.24f * size , new Color( 174 , 174 , 174 ) , new BasicStroke( 0.12f * size ) , null );
 	}
 	
 	public static ImageIcon createJhromeRolloverIcon( )
 	{
-		return createIcon( 12 , 2.5f , new Color( 249 , 235 , 235 ) , new BasicStroke( 1.2f ) , new Color( 193 , 53 , 53 ) );
+		return createJhromeRolloverIcon( 12 );
+	}
+	
+	public static ImageIcon createJhromeRolloverIcon( int size )
+	{
+		return createIcon( size , 0.21f * size , new Color( 249 , 235 , 235 ) , new BasicStroke( 0.1f * size ) , new Color( 193 , 53 , 53 ) );
 	}
 	
 	public static ImageIcon createJhromePressedIcon( )
 	{
-		return createIcon( 12 , 2.5f , new Color( 237 , 233 , 233 ) , new BasicStroke( 1.2f ) , new Color( 67 , 30 , 32 ) );
+		return createJhromePressedIcon( 12 );
+	}
+	
+	public static ImageIcon createJhromePressedIcon( int size )
+	{
+		return createIcon( size , 0.21f * size , new Color( 237 , 233 , 233 ) , new BasicStroke( 0.1f * size ) , new Color( 67 , 30 , 32 ) );
 	}
 	
 	public static ImageIcon createIcon( int size , float xLength , Color xColor , Stroke xStroke , Color circleColor )
