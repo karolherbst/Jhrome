@@ -278,6 +278,8 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 	
 	private final Object				updateLock				= new Object( );
 	
+	private boolean						closeParent				= true;
+	
 	private class MouseManager extends RecursiveListener
 	{
 		MouseAdapter	adapter	= new MouseAdapter( )
@@ -2065,7 +2067,7 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 			}
 			draggedParent.tabbedPane.removeTabAt( tabIndex );
 			dragInfo.tab.setTabComponent( draggedTabComponent );
-			// if( draggedParent.getTabCount( ) == 0 )
+			// if( draggedParent.getTabCount( ) == 0 && TabbedPane.this.closeParent )
 			// {
 			// Window window = SwingUtilities.getWindowAncestor( draggedParent.tabbedPane );
 			// window.setVisible( false );
@@ -2789,5 +2791,19 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 		dest.putClientProperty( ANIMATION_FACTOR , src.getClientProperty( ANIMATION_FACTOR ) );
 		dest.setTabPlacement( src.getTabPlacement( ) );
 		dest.setEnabled( src.isEnabled( ) );
+	}
+	
+	/**
+	 * @return the closeParent
+	 */
+	public boolean isCloseParent() {
+		return closeParent;
+	}
+	
+	/**
+	 * @param closeParent the closeParent to set
+	 */
+	public void setCloseParent(boolean closeParent) {
+		this.closeParent = closeParent;
 	}
 }
