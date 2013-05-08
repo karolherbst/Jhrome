@@ -27,7 +27,8 @@ public class Tab extends JComponent
 	
 	static
 	{
-		UIManager.getDefaults( ).put( uiClassId , JhromeTabUI.class.getName( ) );
+		if (UIManager.get(uiClassId) == null)
+			UIManager.getDefaults( ).put( uiClassId , JhromeTabUI.class.getName( ) );
 	}
 	
 	public Tab( )
