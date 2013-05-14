@@ -434,16 +434,7 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 			@Override
 			public void actionPerformed( ActionEvent e )
 			{
-				if( tabFactory == null )
-				{
-					return;
-				}
-				Tab newTab = tabFactory.createTabWithContent( );
-				if( newTab != null )
-				{
-					tabbedPane.addTab( newTab.getTitle( ) , newTab.getContent( ) );
-					tabbedPane.setSelectedComponent( newTab.getContent( ) );
-				}
+				createNewTab();
 			}
 		};
 		
@@ -488,6 +479,20 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 		}
 		
 		installKeyboardActions( );
+	}
+	
+	public void createNewTab()
+	{
+		if( tabFactory == null )
+		{
+			return;
+		}
+		Tab newTab = tabFactory.createTabWithContent( );
+		if( newTab != null )
+		{
+			tabbedPane.addTab( newTab.getTitle( ) , null , newTab.getContent( ) , newTab.getToolTipText( ) );
+			tabbedPane.setSelectedComponent( newTab.getContent( ) );
+		}
 	}
 	
 	public ITabFactory getTabFactory( )
@@ -2322,6 +2327,7 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 		Color foreground = tabbedPane.getForegroundAt( vIndex );
 		boolean selected = tabbedPane.getSelectedIndex( ) == vIndex;
 		boolean enabled = tabbedPane.isEnabledAt( vIndex );
+		String tooltip = tabbedPane.getToolTipTextAt( vIndex );
 		
 		Tab tab = null;
 		TabInfo info = contentMap.get( content );
@@ -2346,6 +2352,7 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 			tab.setEnabled( enabled );
 			tab.setBackground( background );
 			tab.setForeground( foreground );
+			tab.setToolTipText( tooltip );
 			
 			if( info != null )
 			{
