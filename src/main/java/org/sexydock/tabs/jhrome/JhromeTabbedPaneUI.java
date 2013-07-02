@@ -280,6 +280,8 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 	
 	private boolean						closeParent				= true;
 	
+	private boolean						forceTabReanimating		= false;
+	
 	private class MouseManager extends RecursiveListener
 	{
 		MouseAdapter	adapter	= new MouseAdapter( )
@@ -289,7 +291,14 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 										Point p = e.getPoint( );
 										p = SwingUtilities.convertPoint( ( Component ) e.getSource( ) , p , tabbedPane );
 										boolean newMouseOver = Utils.contains( topZone , p );
-										if( newMouseOver != mouseOverTopZone )
+
+										if( forceTabReanimating )
+										{
+											mouseOverTopZone = false;
+											tabbedPane.invalidate( );
+											tabbedPane.validate( );
+										}
+										else if( newMouseOver != mouseOverTopZone )
 										{
 											mouseOverTopZone = newMouseOver;
 											tabbedPane.invalidate( );
@@ -420,9 +429,6 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 		tabLayeredPane.setLayout( null );
 		tabbedPane.add( tabLayeredPane );
 		
-		tabbedPane.invalidate( );
-		tabbedPane.validate( );
-		
 		mouseOverManager = new MouseManager( );
 		mouseOverManager.addExcludedComponent( tabLayeredPane );
 		mouseOverManager.install( tabbedPane );
@@ -479,6 +485,13 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 		}
 		
 		installKeyboardActions( );
+		
+		// update the internal structure, because the JTabbedPane might be not empty
+		updateTabs( );
+		updateMnemonics( );
+		
+		tabbedPane.invalidate( );
+		tabbedPane.validate( );
 	}
 	
 	public void createNewTab()
@@ -1394,6 +1407,16 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 	private static final int	PREFERRED	= 1;
 	private static final int	MAXIMUM		= 2;
 	
+	public void reanimate( )
+	{
+		mouseOverTopZone = true;
+		tabbedPane.invalidate( );
+		tabbedPane.validate( );
+		mouseOverTopZone = false;
+		tabbedPane.invalidate( );
+		tabbedPane.validate( );
+	}
+	
 	private class TabLayoutManager implements LayoutManager
 	{
 		/**
@@ -1618,7 +1641,7 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 			{
 				vSustainedTabZoneWidth = vCurrentTabZoneWidth;
 			}
-			else if( !mouseOverTopZone && !anyDragging && vSustainedTabZoneWidth > vTargetTabZoneWidth )
+			else if( (!mouseOverTopZone || forceTabReanimating ) && !anyDragging && vSustainedTabZoneWidth > vTargetTabZoneWidth )
 			{
 				animNeeded.value = true;
 				vSustainedTabZoneWidth = animate( vSustainedTabZoneWidth , vTargetTabZoneWidth , animFactor );
@@ -2812,5 +2835,12 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 	 */
 	public void setCloseParent(boolean closeParent) {
 		this.closeParent = closeParent;
+	}
+	
+	/**
+	 * @param forceTabReanimating forces the Tabs to be reanimated after changes
+	 */
+	public void setForceTabReanimating( boolean forceTabReanimating ) {
+		this.forceTabReanimating = forceTabReanimating;
 	}
 }
