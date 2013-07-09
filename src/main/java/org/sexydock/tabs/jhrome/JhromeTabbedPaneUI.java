@@ -88,6 +88,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -155,6 +156,10 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 	public static final boolean	DEFAULT_USE_UNIFORM_WIDTH	= true;
 	
 	public static final double	DEFAULT_ANIMATION_FACTOR	= 0.7;
+	
+	static {
+		UIManager.getDefaults().put(NEW_TAB_BUTTON_UI, JhromeNewTabButtonUI.class.getName());
+	}
 	
 	public JhromeTabbedPaneUI( )
 	{
@@ -433,7 +438,12 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 		mouseOverManager.addExcludedComponent( tabLayeredPane );
 		mouseOverManager.install( tabbedPane );
 		
-		newTabButton = new JButton( );
+		newTabButton = new JButton( ) {
+			@Override
+			public String getUIClassID() {
+				return NEW_TAB_BUTTON_UI;
+			}
+		};
 		
 		newTabButtonListener = new ActionListener( )
 		{
@@ -445,7 +455,6 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 		};
 		
 		newTabButton.addActionListener( newTabButtonListener );
-		newTabButton.setUI( PropertyGetter.get( ButtonUI.class , tabbedPane , NEW_TAB_BUTTON_UI , ( String ) null , new JhromeNewTabButtonUI( ) ) );
 		newTabButton.setVisible( PropertyGetter.get( Boolean.class , tabbedPane , NEW_TAB_BUTTON_VISIBLE , false ) );
 		newTabButton.setEnabled( tabbedPane.isEnabled( ) );
 		contentPanelBorder = PropertyGetter.get( Border.class , tabbedPane , CONTENT_PANEL_BORDER , ( String ) null , new JhromeContentPanelBorder( ) );
@@ -2424,14 +2433,6 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 			{
 				newTabButton.setVisible( PropertyGetter.get( Boolean.class , tabbedPane , NEW_TAB_BUTTON_VISIBLE , ( String ) null , false ) );
 			}
-			else if( NEW_TAB_BUTTON_UI.equals( evt.getPropertyName( ) ) )
-			{
-				ButtonUI ui = PropertyGetter.get( ButtonUI.class , tabbedPane , NEW_TAB_BUTTON_UI , ( String ) null );
-				if( ui != null )
-				{
-					newTabButton.setUI( ui );
-				}
-			}
 			else if( TAB_CLOSE_BUTTONS_VISIBLE.equals( evt.getPropertyName( ) ) )
 			{
 				tabbedPane.repaint( );
@@ -2814,7 +2815,6 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 		dest.putClientProperty( TAB_DROP_FAILURE_HANDLER , src.getClientProperty( TAB_DROP_FAILURE_HANDLER ) );
 		dest.putClientProperty( FLOATING_TAB_HANDLER , src.getClientProperty( FLOATING_TAB_HANDLER ) );
 		dest.putClientProperty( CONTENT_PANEL_BORDER , src.getClientProperty( CONTENT_PANEL_BORDER ) );
-		dest.putClientProperty( NEW_TAB_BUTTON_UI , src.getClientProperty( NEW_TAB_BUTTON_UI ) );
 		dest.putClientProperty( DND_POLICY , src.getClientProperty( DND_POLICY ) );
 		dest.putClientProperty( TAB_CLOSE_BUTTON_LISTENER , src.getClientProperty( TAB_CLOSE_BUTTON_LISTENER ) );
 		dest.putClientProperty( USE_UNIFORM_WIDTH , src.getClientProperty( USE_UNIFORM_WIDTH ) );
